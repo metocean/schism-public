@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LSCgridmaker</class>
+ <widget class="QMainWindow" name="LSCgridmaker">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1288</width>
+    <height>893</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>LSC grid maker</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="sigma_type">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>150</y>
+      <width>521</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="quadratic">
+     <attribute name="title">
+      <string>Quadratic</string>
+     </attribute>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>30</y>
+        <width>441</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Skewness (1: skew toward bottom; -1: toward surface; 0: no bias)</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="avqs0">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>64</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="decimals">
+       <number>1</number>
+      </property>
+      <property name="minimum">
+       <double>-1.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>-0.300000000000000</double>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="sigma">
+     <attribute name="title">
+      <string>S-layer</string>
+     </attribute>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>30</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Theta b</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>80</y>
+        <width>61</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Theta F</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="thetab">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>64</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="thetaf">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>70</y>
+        <width>64</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <double>20.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>50</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>or enter expression:</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="thetab_exp">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>30</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="thetaf_exp">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>80</y>
+        <width>121</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="rutgers">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>0</y>
+        <width>141</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rutgers strecth</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>70</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>R Theta b</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>100</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>R Theta  s</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>130</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>crt. depth</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="tcline">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>120</y>
+        <width>64</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="decimals">
+       <number>2</number>
+      </property>
+      <property name="maximum">
+       <double>99.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>5.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="rtheta_b">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>60</y>
+        <width>64</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <double>20.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="rtheta_s">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>90</y>
+        <width>64</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <double>20.000000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="vstreching">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>20</y>
+        <width>181</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>A. Shchepetkin (2005) UCLA-ROMS</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>R. Geyer function</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>A. Shchepetkin (2010) UCLA-ROMS</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>521</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>The master grid:</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>30</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>min. bottom layer thickness [m]</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>80</y>
+       <width>181</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Depth of each master grid</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="hsm">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>80</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>0:200:50</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="nv_vqs">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>110</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>4+1*(N)</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>110</y>
+       <width>241</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Number of level at each master grid</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="bot_layer_thickness">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>64</width>
+       <height>33</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="maximum">
+      <double>5.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.100000000000000</double>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>370</y>
+      <width>531</width>
+      <height>461</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="Vbox">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetNoConstraint</enum>
+     </property>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>90</y>
+      <width>631</width>
+      <height>751</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="Vbox_vert"/>
+   </widget>
+   <widget class="QLabel" name="titre">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>340</y>
+      <width>401</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1288</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuVgrid">
+    <property name="title">
+     <string>Vgrid</string>
+    </property>
+    <addaction name="import_vgrid"/>
+    <addaction name="export_vgrid"/>
+    <addaction name="export_vgrid_params"/>
+   </widget>
+   <widget class="QMenu" name="menuHgrid">
+    <property name="title">
+     <string>Hgrid</string>
+    </property>
+    <addaction name="import_hgrid"/>
+    <addaction name="export_nlev"/>
+    <addaction name="import_nlev"/>
+   </widget>
+   <widget class="QMenu" name="menuTransect">
+    <property name="title">
+     <string>Transect</string>
+    </property>
+    <addaction name="export_trs"/>
+   </widget>
+   <addaction name="menuVgrid"/>
+   <addaction name="menuHgrid"/>
+   <addaction name="menuTransect"/>
+  </widget>
+  <action name="import_vgrid">
+   <property name="text">
+    <string>import</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="export_vgrid">
+   <property name="text">
+    <string>export</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="import_hgrid">
+   <property name="text">
+    <string>import hgrid.gr3</string>
+   </property>
+  </action>
+  <action name="export_trs">
+   <property name="text">
+    <string>export</string>
+   </property>
+  </action>
+  <action name="export_nlev">
+   <property name="text">
+    <string>export nlev.gr3</string>
+   </property>
+  </action>
+  <action name="export_vgrid_params">
+   <property name="text">
+    <string>export vrgid params</string>
+   </property>
+  </action>
+  <action name="import_nlev">
+   <property name="text">
+    <string>import nlev.gr3</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

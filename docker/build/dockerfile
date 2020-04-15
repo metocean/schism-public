@@ -1,0 +1,155 @@
+FROM centos:centos7
+MAINTAINER Remy Zyngfogel <remy@metocean.co.nz>
+
+RUN yum -y install epel-release &&\
+    yum -y install git vim sudo tar unzip subversion wget &&\
+    yum -y update &&\
+    yum clean all
+
+
+
+RUN yum -y install gcc lftp g++ gcc-c++ && \
+    yum clean all
+
+
+# install base packages through yum
+#RUN yum install -y expat-devel libtool tcl-devel libjpeg-devel libpng-devel gcc-gfortran cmake && \
+#    yum install -y gcc-c++ ruby flex bison libxslt tk tk-devel make file deltarpm
+
+
+
+#RUN yum -y groupinstall 'Development Tools'
+
+#RUN yum -y install libcurl-devel
+
+# Get HDF5, NETCDF, NETDF-FORTRAN AND MPICH2 via ftp/http
+RUN echo "-----------------GET Netcdf MPICH and HDF5"-----------------"" &&\ 
+    cd /usr/src/ &&\ 
+    wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.5.tar.gz && \
+    wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.0.tar.gz && \
+    wget https://codeload.github.com/Unidata/netcdf-fortran/tar.gz/v4.4.0 &&\
+    wget http://www.mpich.org/static/downloads/3.2/mpich-3.2.tar.gz 
+
+RUN yum -y install make m4 zlib-devel zlib-static glibc-devel glibc-static
+
+ADD pgilinux-2019-1910-x86-64.tar.gz /tmp
+
+# Install PGI
+ENV PGI_VERSION 19.10
+ENV PGI_INSTALL_DIR /usr/local/pgi
+ENV PGI_HOME    ${PGI_INSTALL_DIR}/linux86-64/${PGI_VERSION}
+ENV PGI_BIN_DIR ${PGI_HOME}/bin
+ENV PGI_LIB_DIR ${PGI_HOME}/lib
+ENV PGI_MAN_DIR ${PGI_HOME}/man
+
+### INstall PGI
+RUN echo "-----------------Install PGI"-----------------"" &&\
+    export PGI_SILENT=true && \
+    export PGI_ACCEPT_EULA=accept && \
+    export PGI_INSTALL_NVIDIA=false && \
+    export PGI_INSTALL_MANAGED=true && \
+    export PGI_INSTALL_AMD=false && \
+    export PGI_INSTALL_JAVA=false && \
+    export PGI_INSTALL_MPI=true && \
+    export PGI_MPI_GPU_SUPPORT=true && \
+    cd /tmp && \
+    ./install && \
+    rm -rf /tmp/*
+
+RUN echo "${PGI_LIB_DIR}" >> /etc/ld.so.conf.d/pgi.conf
+
+ENV PATH            ${PGI_BIN_DIR}:${PATH}:${PGI_HOME}/mpi/openmpi/bin 
+ENV LD_LIBRARY_PATH ${PGI_LIB_DIR}:${LD_LIBRARY_PATH}:${PGI_HOME}/mpi/openmpi/lib 
+ENV MANPATH         ${PGI_MAN_DIR}:${MANPATH}
+
+
+
+# Install HDF5
+RUN cd /usr/src/ &&\
+    tar zxvf hdf5-1.10.5.tar.gz && \
+    cd hdf5-1.10.5 && \
+    ./configure --prefix=/usr/local \
+                --enable-shared \
+                --enable-hl \
+                FC=pgfortran && \
+    make && \
+    make install 
+
+
+
+# Install NETCDF
+RUN cd /usr/src/ &&\
+    tar zxvf netcdf-4.4.0.tar.gz && \
+    cd netcdf-4.4.0 && \
+    ./configure --enable-netcdf-4 \
+                --enable-dap \
+                --enable-shared \
+                --prefix=/usr/local \
+                FC=pgfortran \
+                CPPFLAGS=-I/usr/local/include \
+                LDFLAGS=-L/usr/local/lib && \
+    make && \
+    make install 
+
+
+# Install NETCDF-FORTRAN
+RUN cd /usr/src/ &&\
+    tar zxvf v4.4.0 && \
+    cd netcdf-fortran-4.4.0 && \
+    export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} && \
+    ./configure --prefix=/usr/local \
+                FC=pgfortran \
+                CPPFLAGS=-I/usr/local/include \
+                 LDFLAGS=-L/usr/local/lib && \
+    make && \
+    make install 
+
+## Install MPICH2
+#RUN cd /usr/src/ &&\
+#    tar zxvf mpich-3.2.tar.gz && \
+#    cd mpich-3.2 && \
+#    ./configure --prefix=/usr/local \
+#                --enable-shared \
+#                --enable-lib-depend \
+#                --enable-sharedlibs=gcc \
+#                F77=pgfortran \
+#                FC=pgfortran \
+#                CC=gcc \
+#                CXX=g++ \
+#                FCFLAGS=-fPIC \
+#                CFLAGS=-fPIC \
+#                CCFLAGS=-fPIC \
+#                CXXFLAGS=-fPIC && \
+#    make && \
+#    make install 
+#
+#RUN cp /usr/lib/gcc/x86_64-redhat-linux/4.8.2/libquadmath.so /usr/local/lib/libquadmath.a
+
+
+
+# Downloading schism
+RUN echo "-----------------Install SCHISM"-----------------"" &&\
+    cd /usr/src/ && \
+    git clone https://github.com/schism-dev/schism.git
+
+
+## edit the makefile
+RUN cd /usr/src/schism/src/ParMetis-3.1-Sep2010 &&\
+    make clean &&\
+    sed -i "s|CC = mpicc|CC = /usr/local/pgi/linux86-64/19.10/mpi/openmpi-3.1.3/bin/mpicc|g" Makefile.in && \
+    sed -i "s|LD = mpicc|LD = /usr/local/pgi/linux86-64/19.10/mpi/openmpi-3.1.3/bin/mpicc|g" Makefile.in
+
+
+
+ADD Make.defs.local /usr/src/schism/mk/
+
+RUN cd /usr/src/schism/src/ &&\
+    make clean &&\
+    make psc
+
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+ENV PATH=$PATH:/usr/local/pgi/linux86-64/19.10/mpi/openmpi-3.1.3/bin/
+
+RUN useradd -ms /bin/bash toto
+
+USER toto

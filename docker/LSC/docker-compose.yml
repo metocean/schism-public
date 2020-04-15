@@ -1,0 +1,28 @@
+
+# HOW-TO:
+#
+# build: "docker-compose build interface"
+# run: "docker-compose run interface"
+# make sure to give docker the rights to access the X-Server:
+# in your local machine run 'xhost +local:docker'
+
+
+version: '2.0'
+services:
+    interface:
+        image: lsc
+        build: 
+            context: '.'
+            args:
+                - GID=$GID
+                - UID=$UID
+                - USER=$USER
+                - DISPLAY=$DISPLAY
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - $HOME:/home/$USER
+        network_mode: host
+        ipc: host
+        pid: host
+        environment:
+          - DISPLAY=unix$DISPLAY

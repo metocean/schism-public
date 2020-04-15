@@ -1,0 +1,212 @@
+## input file to build a 2D model with selfe
+### those lines are compulsory
+rootdir: # path-to-dir
+exec_bin: pschism
+param_tmp: # path-to-file
+hgrid_file: # path-to-file
+epsg: 2193
+timing:
+ time start: 2018, 01, 20
+ time end: 2018, 01, 30
+
+
+input_files:
+  tidal_file1:
+     filename: # path-to-file
+     url:      # opendap-url 
+     cons:     [M2,S2,N2,K2,K1,O1,P1,Q1,MF,MM,M4,MS4,MN4]
+     dset:     nz_tide
+     vars:     [et,ut,vt]
+     Grid:     {x: 173.335, x2: 173.645, y: -35.56, y2: -35.245, dx: 0.06, dy: 0.06}
+     type:     tide
+     id:       # id
+     dt:       0.5 
+
+  residual_file1:
+     filename: # path-to-file
+     url:      # opendap-url  
+     dset:     roms_nz_3D
+     vars:     [uo,vo]
+     Grid:     {x: 173.335, x2: 173.645, y: -35.56, y2: -35.245, dx: 0.06, dy: 0.06}
+     id:       # id
+     dt:       3 
+
+  residual_file3:
+     filename: # path-to-file
+     url:      # opendap-url 
+     dset:     roms_nz_surf
+     vars:     [ssh]
+     Grid:     {x: 173.335, x2: 173.645, y: -35.545, y2: -35.245, dx: 0.06, dy: 0.06 }
+     id:       # id
+     dt:       3
+
+  residual_file2:
+     filename: # path-to-file
+     url:      # opendap-url 
+     dset:     roms_nz_3D
+     vars:     [temp,salt]
+     Grid:     {x: 173.335, x2: 173.645, y: -35.545, y2: -35.245, dx: 0.06, dy: 0.06 }
+     id:       # id
+     dt:       3
+
+
+  weather_file1:
+     filename: # path-to-file
+     url:      # opendap-url 
+     dset:     nzra1_nz
+     vars:     [spfh2m,vgrd10m,ugrd10m,mslp,tmp2m,dlwrfsfc,dswrfsfc,apratesfc]
+     Grid:     {x: 173, x2: 174, y: -36.0, y2: -35.0, dx: 0.5, dy: 0.5}
+     id:       # id
+     dt: 1
+
+vgrid_config:
+  nsigma:  20
+  hc: 30
+  thetab: 1
+  thetaf: 10
+  zcoord: [10,20,30]
+
+
+hydro_config:
+ mode: diffusion 1
+ dt: 20
+ ramp: 5 # in days
+ output dt: 0.25 # in hours
+ file length: 24 # in hours
+ ouput station: 1
+ station dt: 1 # in hours
+ output hotstart: 0
+ hotstart dt: 24 # in hours
+ ntracer_gen: 5
+
+
+ic:
+  salt.ic:
+    filename: # path-to-file
+    var: salt
+  temp.ic:
+    value: 15
+  tvd.prop:
+    value: 1
+
+
+# stations:
+#   outputs:
+#     elev: 1
+#     air pressure: 0
+#     windx: 0
+#     windy: 0
+#     temp: 0 
+#     sal: 0
+#     u: 0
+#     v: 0
+#     w: 0
+#   adcp1:
+#     depth: [2,50,98] # enter the depth in % (i.e 0% surface 50% mid-depth 100% bottom)
+#     node: 95
+#   rbr1:
+#     depth: [50]
+#     xy:    [1,2]
+
+obc:
+ cons: Z0 M2 S2 N2 K2 K1 O1 P1 Q1 MF MM M4 MS4 MN4
+ 1: # open bnd
+   iettype:
+     value: 4
+   ifltype:
+     value: -4
+     inflow: 0.9
+     outflow: 0.3
+
+   itetype:
+    value: 4
+    tobc: 0.5
+
+   isatype:
+    value: 4
+    tobc: 0.5
+
+ 2-5: #Rivers
+   iettype:
+     value: 0
+   ifltype:
+     value: 1
+     tobc: 0.8
+   itetype:
+    value: 1
+    tobc: 0.8
+   isatype: 
+    value: 2
+    const: 0
+    tobc: 1         
+
+forcings:
+  elev2D.th.nc:
+   dt: 900
+   bnd: [1]
+   tidal:
+     filename: # path-to-file
+     vars: ['et_amp','et_pha']
+   residual:
+     filename: # path-to-file
+     vars: ['ssh']
+
+  tide_only2D.th.nc:
+   dt: 900
+   bnd: [1]
+   tidal:
+     filename: # path-to-file
+     vars: ['et_amp','et_pha']
+
+
+  tide_only3D.th.nc:
+     dt: 900
+     bnd: [1]
+     tidal:
+        filename: # path-to-file
+        vars: ['ut_amp','vt_amp']
+
+  uv3D.th.nc:
+     dt: 900
+     bnd: [1]
+     tidal:
+        filename: # path-to-file
+        vars: ['ut_amp','vt_amp']
+     residual:
+        filename: # path-to-file
+        vars: ['uo','vo']
+
+  TEM_3D.th.nc:
+     dt: 3600
+     bnd: [1]
+     residual:
+        filename: # path-to-file
+        vars: [temp]
+
+   # TEM_nu.nc:
+   #   filename: /oldhome/remy/Buisness/0448_Hokianga/test_run/inputs/res1.nc
+   #   vars: surf_el
+
+   # GEN_1.th:
+   #   dt: 3600
+   #   1-10:
+   #      Y: 0
+   #   11: # Maitai river
+   #      filename: /oldhome/remy/Buisness/0448_Hokianga/river/temp.mat
+   #      X: x
+   #      Y: y
+
+meteo:
+  dt: 1
+  1:
+      filename: # path-to-file
+      uwind: ugrd10m
+      vwind: vgrd10m
+      prmsl: mslp
+      stmp:  tmp2m
+      spfh:  spfh2m
+      dlwrf: dlwrfsfc
+      dswrf: dswrfsfc
+      prate: apratesfc
+
+

@@ -1,0 +1,128 @@
+
+FROM centos:centos7
+MAINTAINER Remy Zyngfogel <remy@metocean.co.nz>
+
+RUN yum -y install epel-release &&\
+    yum -y install git vim sudo tar unzip wget gcc\
+                   python-pip python-devel MySQL-python\
+                   openssh-server initscripts &&\
+    yum -y update &&\
+    yum clean all
+
+RUN echo "-----------------Install yum stuff-----------------"
+
+RUN yum -y install autoconf automake gcc gcc-c++ gcc-gfortran make unzip patch &&\
+    yum -y install openssl-devel bzip2-devel libffi libffi-devel &&\
+    yum -y install netcdf netcdf-devel hdf5 hdf hdf-devel libpng12-devel nco &&\
+    yum -y update && yum clean all
+
+RUN yum -y install cmake gcc-gfortran libpng-devel libjpeg-devel libxml2-devel libxslt-devel sqlite &&\
+    yum -y install sqlite-devel bzip2-devel gdbm-devel openssl-devel tcl-devel tk-devel db4-devel expat-devel &&\
+    yum -y install libffi-devel gcc-c++ mesa-libGL-devel mesa-libGLU-devel libXt-devel automake bzip2 spatialindex ncurses-devel cmake 
+
+RUN echo "-----------------Install ANACONDA3-----------------"
+
+RUN cd /usr/src/ &&\
+    wget https://repo.anaconda.com/archive/Anaconda3-5.2.0-Linux-x86_64.sh &&\
+    sha256sum Anaconda3-5.2.0-Linux-x86_64.sh
+
+RUN cd /usr/src/ &&\
+    bash ./Anaconda3-5.2.0-Linux-x86_64.sh -b -p /opt/conda &&\
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh 
+#    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+
+
+
+COPY cdat-v81_py3.6.Linux.yaml /usr/src/
+
+RUN echo "-----------------Install CDAT -----------------" &&\
+    cd /usr/src/ &&\
+    /opt/conda/bin/conda env create -n schism -f cdat-v81_py3.6.Linux.yaml
+
+ 
+RUN echo "-----------------Install environment SCHISM -----------------" &&\
+    echo "source /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc &&\
+    echo "conda activate schism" >> ~/.bashrc
+
+
+
+
+RUN echo "-----------------Install VACUMM -----------------" &&\
+     cd /usr/src/ &&\
+     git clone -b python3 https://github.com/VACUMM/vacumm.git
+
+
+#ENV PATH /opt/conda/envs/schism/bin:$PATH
+ENV LC_CTYPE en_US.UTF-8
+ENV LANG en_US.UTF-8
+
+RUN ["/bin/bash","-c", "source /opt/conda/etc/profile.d/conda.sh && conda activate schism && cd /usr/src/vacumm/ && pip install configobj && pip install seawater && python setup.py install"]
+
+ENV CDAT_ANONYMOUS_LOG no
+
+
+RUN echo "-----------------Install PySCHISM -----------------" &&\
+    cd /usr/src/ &&\
+    git clone https://github.com/schism-dev/pyschism
+
+RUN ["/bin/bash","-c", "source /opt/conda/etc/profile.d/conda.sh && conda activate schism && cd /usr/src/pyschism/ && pip install ."]
+
+
+RUN cd /opt/conda/envs/schism/lib/python3.6/site-packages/pyschism/mesh/ &&\
+    sed -i "s|@lru_cache|@lru_cache()|g" base.py &&\
+    sed -i "s|@lru_cache|@lru_cache()|g" hgrid.py &&\
+    sed -i "s|@lru_cache|@lru_cache()|g" vgrid.py &&\
+    sed -i "s|@lru_cache|@lru_cache()|g" mesh.py
+
+RUN cd /opt/conda/envs/schism/lib/python3.6/site-packages/pyschism/forcing/ &&\
+    sed -i "s|@lru_cache|@lru_cache()|g" tides.py
+##
+RUN cd /opt/conda/envs/schism/lib/python3.6/site-packages/pyschism/driver/&&\
+    sed -i "s|@lru_cache|@lru_cache()|g" driver.py &&\
+    sed -i "s|@lru_cache|@lru_cache()|g" param.py
+
+RUN echo "-----------------Install PIP stuff -----------------"
+RUN ["/bin/bash","-c", "source /opt/conda/etc/profile.d/conda.sh && conda activate schism && pip install pyyaml mako rtree gnureadline pyproj==2.4.2"]
+
+
+
+
+RUN echo "-----------------Install ttide-----------------" &&\
+    cd /usr/src/ &&\
+    git clone https://github.com/moflaher/ttide_py
+RUN ["/bin/bash","-c", "source /opt/conda/etc/profile.d/conda.sh && conda activate schism && cd /usr/src/ttide_py/ && pip install ."]
+
+
+RUN cd /opt/conda/envs/schism/lib/python3.6/site-packages/pyschism/mesh/ &&\
+    sed -i "s|assert IDtag in self.coords_id, msg|print('IDtag in self.coords_id, msg')|g" base.py
+
+
+RUN cd /opt/conda/envs/schism/lib/python3.6/site-packages/vacumm/misc/grid/ &&\
+    sed -i "s|nex = zi.size/zi.shape[-1]|nex = zi.size//zi.shape[-1]|g" regridding.py &&\
+    sed -i "s|nzi = vari.size/(nxi*nyi)|nzi = vari.size//(nxi*nyi)|g" regridding.py &&\
+    sed -i "s|nex = var.size/(var.shape[-1]*var.shape[-2]|nex = var.size//(var.shape[-1]*var.shape[-2]|g" regridding.py
+    #replace vcdwarn to print in regridding
+
+
+RUN yum -y install udunits2-devel
+RUN yum -y install proj proj-devel
+RUN echo "-----------------Install CDO-----------------" &&\
+    cd /usr/src/ &&\
+    wget https://code.mpimet.mpg.de/attachments/download/20826/cdo-1.9.8.tar.gz &&\
+    tar -zxvf cdo-1.9.8.tar.gz &&\
+    cd cdo-1.9.8 &&\
+    ./configure --with-netcdf --with-jasper --with-hdf5  --with-udunits2 &&\
+    make &&\
+    make install
+
+
+
+
+
+
+#RUN cd /usr/src/ &&\
+#    git clone https://github.com/CADWRDeltaModeling/vtools.git &&\
+#    git checkout vtools-py3 &&\
+#    pip3 install .
+
+
