@@ -1,0 +1,26 @@
+# SCHISM time history input file [*.th.nc]
+
+netcdf th {
+dimensions:
+    nOpenBndNodes = 0 ;
+    nLevels = 0 ;
+    nComponents = 0 ;
+    one = 1 ;
+    time = 0 ;
+variables:
+    float time_step(one) ;
+        time_step:long_name = "time step" ;
+        time_step:units = "seconds" ;
+    double time(time) ;
+        time:long_name = "simulation time" ;
+        time:units = "seconds" ;
+    float time_series(time, nOpenBndNodes, nLevels, nComponents) ;
+        time_series:long_name = "" ;
+        time_series:units = "" ;
+        time_series:time = "" ;
+        time_series:coordinates = "" ;
+        time_series:_FillValue = 1.e+20 ;
+// global attributes:
+        :type = "" ;
+        :title = "" ;
+}

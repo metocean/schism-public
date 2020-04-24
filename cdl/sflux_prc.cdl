@@ -1,0 +1,32 @@
+# SCHISM sflux input file (sflux_prc_*.nc)
+# Based on NARR file format: http://ccrm.vims.edu/yinglong/wiki_files/NARR/
+
+netcdf sflux_prc {
+dimensions:
+	nx_grid = 0 ;
+	ny_grid = 0 ;
+	time = 0 ;
+variables:
+	float time(time) ;
+		time:long_name = "Time" ;
+		time:standard_name = "time" ;
+		time:units = "seconds since XXXX" ;
+		time:base_date = XXXX ;
+	float lon(ny_grid, nx_grid) ;
+		lon:long_name = "Longitude" ;
+		lon:standard_name = "longitude" ;
+		lon:units = "degrees_east" ;
+	float lat(ny_grid, nx_grid) ;
+		lat:long_name = "Latitude" ;
+		lat:standard_name = "latitude" ;
+		lat:units = "degrees_north" ;
+	float prate(time, ny_grid, nx_grid) ;
+		prate:long_name = "Surface Precipitation Rate" ;
+		prate:standard_name = "precipitation_flux" ;
+		prate:units = "kg/m^2/s" ;
+
+// global attributes:
+        :type = "" ;
+        :title = "" ;
+        :Conventions = "CF-1.0" ;
+}

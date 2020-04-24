@@ -1,0 +1,47 @@
+# SCHISM sflux input file (sflux_air_*.nc)
+# Based on NARR file format: http://ccrm.vims.edu/yinglong/wiki_files/NARR/
+
+netcdf sflux_air {
+dimensions:
+	nx_grid = 0 ;
+	ny_grid = 0 ;
+	time = 0 ;
+variables:
+	float time(time) ;
+		time:long_name = "Time" ;
+		time:standard_name = "time" ;
+		time:units = "seconds since XXXX" ;
+		time:base_date = XXXX ;
+	float lon(ny_grid, nx_grid) ;
+		lon:long_name = "Longitude" ;
+		lon:standard_name = "longitude" ;
+		lon:units = "degrees_east" ;
+	float lat(ny_grid, nx_grid) ;
+		lat:long_name = "Latitude" ;
+		lat:standard_name = "latitude" ;
+		lat:units = "degrees_north" ;
+	float uwind(time, ny_grid, nx_grid) ;
+		uwind:long_name = "Surface Eastward Air Velocity (10m AGL)" ;
+		uwind:standard_name = "eastward_wind" ;
+		uwind:units = "m/s" ;
+	float vwind(time, ny_grid, nx_grid) ;
+		vwind:long_name = "Surface Northward Air Velocity (10m AGL)" ;
+		vwind:standard_name = "northward_wind" ;
+		vwind:units = "m/s" ;
+	float prmsl(time, ny_grid, nx_grid) ;
+		prmsl:long_name = "Pressure reduced to MSL" ;
+		prmsl:standard_name = "air_pressure_at_sea_level" ;
+		prmsl:units = "Pa" ;
+	float stmp(time, ny_grid, nx_grid) ;
+		stmp:long_name = "Surface Air Temperature (2m AGL)" ;
+		stmp:standard_name = "air_temperature" ;
+		stmp:units = "K" ;
+	float spfh(time, ny_grid, nx_grid) ;
+		spfh:long_name = "Surface Specific Humidity (2m AGL)" ;
+		spfh:standard_name = "specific_humidity" ;
+		spfh:units = "1" ;
+// global attributes:
+        :type = "" ;
+        :title = "" ;
+        :Conventions = "CF-1.0" ;
+}

@@ -1,0 +1,40 @@
+# WWM parametric boundary input file [dir]
+# Based WW3 file format
+
+netcdf wwmbnd_dir {
+dimensions:
+        time = 0 ;
+        latitude = 0 ;
+        longitude = 0 ;
+variables:
+        double time(time) ;
+                time:long_name = "julian day (UT)" ;
+                time:standard_name = "time" ;
+                time:units = "seconds since" ;
+                time:conventions = "relative julian days with decimal part (as parts of the day)" ;
+                time:axis = "T" ;
+        double latitude(latitude) ;
+                latitude:units = "degree_north" ;
+                latitude:long_name = "latitude" ;
+                latitude:standard_name = "latitude" ;
+                latitude:valid_min = -90.f ;
+                latitude:valid_max = 90.f ;
+                latitude:axis = "Y" ;
+        double longitude(longitude) ;
+                longitude:units = "degree_east" ;
+                longitude:long_name = "longitude" ;
+                longitude:standard_name = "longitude" ;
+                longitude:valid_min = -180.f ;
+                longitude:valid_max = 180.f ;
+                longitude:axis = "X" ;
+        short dir(time, latitude, longitude) ;
+                dir:long_name = "wave mean direction" ;
+                dir:standard_name = "sea_surface_wave_from_direction" ;
+                dir:globwave_name = "wave_from_direction" ;
+                dir:units = "degree" ;
+                dir:valid_min = 0 ;
+                dir:valid_max = 3600 ;
+// global attributes:
+        :type = "" ;
+        :title = "" ;
+}
